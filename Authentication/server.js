@@ -5,6 +5,7 @@ const connectToDB = require("./database/db");
 const homeRoutes = require("./routes/home-routes");
 const adminRoutes = require("./routes/admin-routes");
 const uploadImageRoutes= require("./routes/image-routes");
+const { deleteImageController } = require("./controllers/image-controller");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
