@@ -10,10 +10,9 @@ const authMiddleware = (req, res, next) => {
         return res.status(401).json({
             success: false,
             message:
-                "Access denied. No token provided. Please login to continue"
+                "Access denied. No token provided. Please login to continue with correct credintial"
         });
     }
-
     try {
         const decodedToken = jwt.verify(
             token,
