@@ -59,9 +59,7 @@ const registerUser = async (req, res) => {
     }
 }
 
-
 // login controller
-
 const loginUser = async (req, res) => {
     try {
         const { username, password } = req.body;  // collect username and password from request body
@@ -102,6 +100,52 @@ const loginUser = async (req, res) => {
     }
 }
 
-module.exports = { loginUser, registerUser }
+// change password
+const changePassword = async(req,res)=>{
+    try{
+        const userId = req.userInfo.userId // after access the token we decode it and collect the all user information and store it in userInfo 
+        // extract old and new password
+        const {oldPassword , newPassword} = req.body;
+        // find the current logged in user
+        const user = await User.findById(userId);
+        if(!user){
+            return res.status(400).json({
+                success : false,
+                message : "user not find"
+            })
+        }
+
+        // check if the old password is correct
+        const isPasswordMatch = await bcrypt.compare(oldPassword , user.password);
+        
+        if(!isPasswordMatch){
+            return res.status(400).json({
+                success : false, 
+                message  : "Old password is not correct Please try again."
+            })
+        }
+        // hash the new password here
+        const salt = await bcrypt.genSalt(10);
+        const newHashedPassword = await bcrypt.hash(newPassword,salt);
+
+         // update user password
+         user.password = newHashedPassword // old password update by new hashed password
+         await user.save()  // now save this in database
+          
+        res.status(200).json({
+            success : true , 
+            message : "Password chnage successfully"
+        })
+    }catch(err){
+        console.log(err);
+        res.status(500).json({
+            success : false , 
+            message : "user not authenticated"
+        })
+    }
+}
+
+
+module.exports = { loginUser, registerUser  , changePassword}
 
 
