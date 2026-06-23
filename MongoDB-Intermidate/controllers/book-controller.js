@@ -60,7 +60,7 @@ const getBookWithAuthor = async(req,res)=>{
         console.log(err);
         res.status(500).json({
             success : false , 
-            message : "something went wrong"
+            message : "something went wrong please try again"
         })
     }
 }
